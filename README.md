@@ -1,47 +1,50 @@
-# The House Fight Game
+# The House Fight Game v2
 
-AI-powered party game. One fighter, everyone picks a challenger, Claude runs the simulation.
+Cross-nation party game with accounts, rooms, and global leaderboard.
 
-## Deploy to Vercel (step by step)
+## Setup order
 
-### 1. Get an Anthropic API key
-- Go to https://console.anthropic.com
-- Create an account and go to API Keys
-- Create a new key — copy it somewhere safe
+### 1. Supabase
+1. Go to https://supabase.com and create a free project
+2. Go to SQL Editor and run the entire contents of `supabase/schema.sql`
+3. Go to Authentication > Providers > Google and enable Google OAuth
+   - You'll need a Google Cloud project with OAuth credentials
+   - Authorized redirect URI: `https://your-project-ref.supabase.co/auth/v1/callback`
+4. Copy your project URL and keys from Settings > API
 
-### 2. Push this project to GitHub
-```bash
-cd house-fight-game
-git init
-git add .
-git commit -m "Initial commit"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/house-fight-game.git
-git push -u origin main
+### 2. Environment variables
+Create `.env.local`:
+```
+NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+ANTHROPIC_API_KEY=your_anthropic_key
+NEXT_PUBLIC_SITE_URL=https://your-vercel-url.vercel.app
 ```
 
-### 3. Deploy on Vercel
-- Go to https://vercel.com and sign in with GitHub
-- Click "Add New Project"
-- Import your `house-fight-game` repository
-- Before deploying, click "Environment Variables" and add:
-  - Name: `ANTHROPIC_API_KEY`
-  - Value: your key from step 1
-- Click Deploy
+### 3. Vercel deployment
+1. Push to GitHub
+2. Import project in Vercel
+3. Add ALL environment variables from above in Vercel settings
+4. Deploy
 
-That's it. Vercel gives you a public URL you can share with anyone.
+### 4. Supabase auth callback
+In Supabase > Authentication > URL Configuration:
+- Site URL: your Vercel URL
+- Redirect URLs: your Vercel URL + `/**`
 
-## Local development
+## How to play
+1. Sign in with Google
+2. Create a room → set anchor fighter → share the 6-character code
+3. Everyone joins on their own phone at your Vercel URL
+4. Each player submits their challenger
+5. Host hits Simulate — AI runs all fights at once
+6. Results show on everyone's screen via realtime
+7. Stats save to each player's profile automatically
+8. Start new rounds, or check the global leaderboard
+
+## Local dev
 ```bash
 npm install
-# Edit .env.local and add your key:
-# ANTHROPIC_API_KEY=your_key_here
 npm run dev
-# Open http://localhost:3000
 ```
-
-## How it works
-- `/app/page.js` — the full game frontend
-- `/app/api/fight/route.js` — secure backend route that calls Claude to simulate fights
-- `/app/api/random-fighter/route.js` — generates random fighters
-- Your API key never touches the browser — it only lives in Vercel's environment variables
