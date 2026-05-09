@@ -1,6 +1,5 @@
 export const dynamic = 'force-dynamic'
 import { supabaseAdmin } from '@/lib/supabase'
-export const dynamic = 'force-dynamic'
 import Anthropic from '@anthropic-ai/sdk'
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
