@@ -1,11 +1,11 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { COLORS, ini } from '@/lib/colors'
 import '../globals.css'
 
-export default function Profile() {
+function ProfileInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const viewId = searchParams.get('id')
@@ -110,5 +110,13 @@ export default function Profile() {
         )}
       </div>
     </div>
+  )
+}
+
+export default function Profile() {
+  return (
+    <Suspense fallback={<div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}><div className="spin" style={{width:40,height:40,border:'3px solid #222',borderTopColor:'#e63329',borderRadius:'50%'}}></div></div>}>
+      <ProfileInner />
+    </Suspense>
   )
 }
